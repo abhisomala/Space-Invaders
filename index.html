@@ -36,6 +36,7 @@ kaboom({
   plugins: [ peditPlugin, asepritePlugin, kbmspritePlugin ],
 });
 loadKbmsprite("space-invader", "sprites/space-invader.kbmsprite");
+loadKbmsprite("space-invader2", "sprites/space-invader2.kbmsprite");
 loadKbmsprite("space-ship", "sprites/space-ship.kbmsprite");
 loadKbmsprite("wall", "sprites/wall.kbmsprite");
 scene("main", (args = {}) => {
@@ -49,8 +50,8 @@ const BULLET_SPEED = 400
 layer(['obj', 'ui'], 'obj')
 
 addLevel([
-  '!^^^^^^^^^^^^^^^^    &',
-  '!^^^^^^^^^^^^^^^^    &',
+  '!^@@^^^^^^^^@@^^^    &',
+  '!^^^^^^^@@@^^^^^^    &',
   '!^^^^^^^^^^^^^^^^    &', 
   '!                    &',
   '!                    &',
@@ -65,6 +66,7 @@ addLevel([
   width: 30,
   height: 22,
   '^' : [ sprite('space-invader'), scale(0.7), 'space-invader'],
+   '@' : [ sprite('space-invader2'), scale(0.7), 'space-invader2'],
   '!' : [ sprite('wall'), 'left-wall'],
   '&' : [ sprite('wall'), 'right-wall'],
 })
@@ -111,6 +113,13 @@ collides('bullet', 'space-invader', (b,s) => {
   score.value++
   score.text = score.value
 })
+collides('bullet', 'space-invader2', (b,s) => {
+  camShake(4)
+  destroy(b)
+  destroy(s)
+  score.value++
+  score.text = score.value
+})
 
 const score = add([
   text('0'),
@@ -144,6 +153,9 @@ timer.action(() =>  {
 action('space-invader', (s) => {
   s.move(CURRENT_SPEED, 0)
 })
+action('space-invader2', (s) => {
+  s.move(CURRENT_SPEED, 0)
+})
 
 collides('space-invader', 'right-wall', () => {
   CURRENT_SPEED = -INVADER_SPEED
@@ -162,10 +174,14 @@ collides('space-invader', 'left-wall', () => {
 player.overlaps('space-invader', () => {
   go('lose', { score: score.value })
 })
+player.overlaps('space-invader2', () => {
+  go('lose', { score: score.value })
+})
+
 
 action('space-invader', (s) => {
   if (s.pos.y >= (12 * 22)) {
-  // if (s.pos.y >= height() /2) {
+   if (s.pos.y >= height() /2) {
       go('lose', { score: score.value })
   }
 })
