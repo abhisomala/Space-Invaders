@@ -1,5 +1,6 @@
 const MOVE_SPEED = 200
 const INVADER_SPEED = 100
+const INVADER2_SPEED=150
 let CURRENT_SPEED = INVADER_SPEED
 const LEVEL_DOWN = 200
 const TIME_LEFT = 30
@@ -8,7 +9,7 @@ const BULLET_SPEED = 400
 layer(['obj', 'ui'], 'obj')
 
 addLevel([
-  '!^@@^^^^^^^^@@^^^    &',
+  '!@^@^^^^^^^^@@^^^    &',
   '!^^^^^^^@@@^^^^^^    &',
   '!^^^^^^^^^^^^^^^^    &', 
   '!                    &',
@@ -128,6 +129,19 @@ collides('space-invader', 'left-wall', () => {
     s.move(0, LEVEL_DOWN)
   })
 })
+collides('space-invader2', 'right-wall', () => {
+  CURRENT_SPEED = -INVADER_SPEED2
+  every('space-invader2', (s) => {
+    s.move(0, LEVEL_DOWN)
+  })
+})
+
+collides('space-invader2', 'left-wall', () => {
+  CURRENT_SPEED = INVADER_SPEED2
+  every('space-invader2', (s) => {
+    s.move(0, LEVEL_DOWN)
+  })
+})
 
 player.overlaps('space-invader', () => {
   go('lose', { score: score.value })
@@ -138,6 +152,12 @@ player.overlaps('space-invader2', () => {
 
 
 action('space-invader', (s) => {
+  if (s.pos.y >= (12 * 22)) {
+  // if (s.pos.y >= height() /2) {
+      go('lose', { score: score.value })
+  }
+})
+action('space-invader2', (s) => {
   if (s.pos.y >= (12 * 22)) {
   // if (s.pos.y >= height() /2) {
       go('lose', { score: score.value })
